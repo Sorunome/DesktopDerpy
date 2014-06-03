@@ -73,7 +73,7 @@ class Derpy:
 		if event.button == 3:
 			self.rightclickMenu.popup(parent_menu_shell = None,parent_menu_item = None,func = None,data = None,button = event.button,activate_time = event.time)
 	def set_rand_event_timer(self):
-		GObject.timeout_add(random.randint(3,7)*1000,self.rand_event)
+		GObject.timeout_add(random.randint(3000,6000),self.rand_event)
 	def set_draw_frame_timer(self):
 		GObject.timeout_add(1000/30,self.draw_frame)
 	def set_actions(self):
@@ -100,7 +100,7 @@ class Derpy:
 			oldYVel = self.yVel
 			if random.randint(1,2)==1:
 				self.xVel = random.choice([-2,0,2])
-			if random.randint(1,2)==2:
+			if random.randint(1,2)==1:
 				self.yVel = random.choice([-2,0,2])
 			if oldXVel!=self.xVel or oldYVel!=self.yVel:
 				self.set_actions()
