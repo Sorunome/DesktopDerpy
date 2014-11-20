@@ -37,6 +37,7 @@ class Derpy:
 		self.extra = ''
 		self.wing = False
 		self.sleep = False
+		self.drag = False
 		self.xPos = (Gdk.Screen.get_default().get_width() / 2) - (self.width / 2)
 		self.yPos = (Gdk.Screen.get_default().get_height() / 2) - (self.height / 2)
 		
@@ -62,6 +63,9 @@ class Derpy:
 		addMenuItem(self.rightclickMenu,'Quit',self.show_quit_dialog)
 		
 		self.window.connect('button-press-event',self.button_press)
+		self.window.connect('button-release-event',self.button_release)
+		self.window.connect('motion-notify-event',self.mouse_move)
+		
 		
 		self.window.show_all()
 		
@@ -72,6 +76,29 @@ class Derpy:
 	def button_press(self,widget,event):
 		if event.button == 3:
 			self.rightclickMenu.popup(parent_menu_shell = None,parent_menu_item = None,func = None,data = None,button = event.button,activate_time = event.time)
+		if event.button == 1:
+			self.x_offset = event.x_root - self.xPos
+			self.y_offset = event.y_root - self.yPos
+			self.xVel = 0
+			self.yVel = 0
+			self.action = 'drag'
+			self.extra = ''
+			self.drag = True
+			self.set_image()
+	def button_release(self,widget,event):
+		if event.button == 1:
+			self.action = 'stand'
+			self.xPos = event.x_root - self.x_offset
+			self.yPos = event.y_root - self.y_offset
+			self.drag = False
+			self.set_rand_event_timer()
+			self.set_draw_frame_timer()
+			self.set_actions()
+	def mouse_move(self,widget,event):
+		if self.drag:
+			self.xPos = event.x_root - 51
+			self.yPos = event.y_root - 7
+			self.draw_frame()
 	def set_rand_event_timer(self):
 		GObject.timeout_add(random.randint(3000,6000),self.rand_event)
 	def set_draw_frame_timer(self):
@@ -95,7 +122,7 @@ class Derpy:
 			self.extra = ''
 		self.set_image()
 	def rand_event(self):
-		if not self.sleep:
+		if not (self.sleep or self.drag):
 			oldXVel = self.xVel
 			oldYVel = self.yVel
 			if random.randint(1,2)==1:
@@ -114,6 +141,7 @@ class Derpy:
 			self.yVel = 0
 			self.xVel = 0
 			self.action = 'sleep'
+			self.extra = ''
 			self.set_image()
 		else:
 			self.action = 'stand'
@@ -142,7 +170,7 @@ class Derpy:
 		
 		self.window.move(self.xPos,self.yPos)
 		
-		return not self.sleep
+		return not (self.sleep or self.drag)
 	def area_draw(self,widget,cr):
 		cr.set_source_rgba(0,0,0,0)
 		cr.set_operator(cairo.OPERATOR_SOURCE)
