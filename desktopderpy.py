@@ -81,19 +81,26 @@ class Derpy:
 			self.y_offset = event.y_root - self.yPos
 			self.xVel = 0
 			self.yVel = 0
+			self.xPos = event.x_root - 51
+			self.yPos = event.y_root - 7
 			self.action = 'drag'
 			self.extra = ''
 			self.drag = True
 			self.set_image()
+			self.draw_frame()
 	def button_release(self,widget,event):
 		if event.button == 1:
-			self.action = 'stand'
+			self.drag = False
 			self.xPos = event.x_root - self.x_offset
 			self.yPos = event.y_root - self.y_offset
-			self.drag = False
-			self.set_rand_event_timer()
-			self.set_draw_frame_timer()
-			self.set_actions()
+			if self.sleep:
+				self.action = 'sleep'
+				self.set_image()
+			else:
+				self.action = 'stand'
+				self.set_rand_event_timer()
+				self.set_draw_frame_timer()
+				self.set_actions()
 	def mouse_move(self,widget,event):
 		if self.drag:
 			self.xPos = event.x_root - 51
@@ -153,20 +160,24 @@ class Derpy:
 		if self.xPos < 0:
 			self.xPos = 0
 			self.xVel = 0
-			self.set_actions()
+			if not self.drag:
+				self.set_actions()
 		elif self.xPos > (Gdk.Screen.get_default().get_width() - self.width):
 			self.xPos = Gdk.Screen.get_default().get_width() - self.width
 			self.xVel = 0
-			self.set_actions()
+			if not self.drag:
+				self.set_actions()
 		self.yPos += self.yVel
 		if self.yPos < 0:
 			self.yPos = 0
 			self.yVel = 0
-			self.set_actions()
+			if not self.drag:
+				self.set_actions()
 		elif self.yPos > (Gdk.Screen.get_default().get_height() - self.height):
 			self.yPos = Gdk.Screen.get_default().get_height() - self.height
 			self.yVel = 0
-			self.set_actions()
+			if not self.drag:
+				self.set_actions()
 		
 		self.window.move(self.xPos,self.yPos)
 		
