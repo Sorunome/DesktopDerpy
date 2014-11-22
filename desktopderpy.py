@@ -43,9 +43,9 @@ class Derpy:
 		
 		
 		self.wingActions = ['stand','walking']
-		self.actionsStand = ['hover','hoverupsidedown','sleep','stand','sit']
-		self.actionsMove = ['fly','flyupsidedown','walking','walking']
-		self.actionsFly = ['fly','flyupsidedown']
+		self.actionsStand = ['hover','hover','hoverupsidedown','sleep','stand','stand','sit','sit']
+		self.actionsMove = ['fly','fly','flyupsidedown','walking','walking','walking','walking']
+		self.actionsFly = ['fly','fly','fly','flyupsidedown']
 		
 		self.window.move(self.xPos,self.yPos)
 		
